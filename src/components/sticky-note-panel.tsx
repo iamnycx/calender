@@ -174,7 +174,7 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
     "bg-secondary/50 ring-muted-foreground/10 text-foreground flex h-8 min-w-16 items-center justify-center rounded-full px-3 text-xs font-semibold tracking-wide shadow-2xs ring";
 
   return (
-    <div className="relative h-88 w-80 -translate-y-16 -rotate-2 md:translate-y-0">
+    <div className="relative h-88 w-80 -translate-y-16 -rotate-2 scale-[0.88] md:translate-y-0">
       <svg width="0" height="0" aria-hidden="true" className="absolute">
         <defs>
           <clipPath id={clipPathId} clipPathUnits="objectBoundingBox">

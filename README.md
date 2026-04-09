@@ -12,13 +12,6 @@ A polished Next.js calendar demo with a two-mode experience:
 
 https://calender-one-self.vercel.app/
 
-## Clone Repository
-
-```bash
-git clone https://github.com/iamnycx/calender
-cd calender
-```
-
 ## Design Choices
 
 This project keeps the interface intentionally tactile and editorial rather than generic:
@@ -29,23 +22,36 @@ This project keeps the interface intentionally tactile and editorial rather than
 - Light mode is the default theme so the experience opens in the most readable state by default.
 - The zen calendar is spaced for a calmer reading flow, while the regular calendar keeps the compact dashboard layout.
 
+## Notes
+
+- Theme selection is handled with `next-themes`.
+- Calendar and note state live in local Zustand stores.
+- Motion is powered by `motion/react`.
+
 ## Run Locally
 
 This project uses Bun.
 
-1. Install dependencies:
+1. Clone the repository and enter it:
+
+```bash
+git clone https://github.com/iamnycx/calender
+cd calender
+```
+
+2. Install dependencies:
 
 ```bash
 bun install
 ```
 
-2. Start the development server:
+3. Start the development server:
 
 ```bash
 bun dev
 ```
 
-3. Open the app in your browser:
+4. Open the app in your browser:
 
 ```text
 http://localhost:3000
@@ -60,9 +66,3 @@ bun run lint
 bun run typecheck
 bun run format:check
 ```
-
-## Notes
-
-- Theme selection is handled with `next-themes`.
-- Calendar and note state live in local Zustand stores.
-- Motion is powered by `motion/react`.

@@ -10,6 +10,7 @@ import { type NoteTarget, useNotesStore } from "~/lib/notes-store";
 
 export function AnimatedCalendarView() {
   const { isZenMode, setZenMode } = useZenModeStore();
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [activeStickyTarget, setActiveStickyTarget] =
     useState<NoteTarget | null>(null);
   const [closingStickyTarget, setClosingStickyTarget] =
@@ -19,6 +20,21 @@ export function AnimatedCalendarView() {
 
   useEffect(() => {
     useNotesStore.getState().hydrateNotes();
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+
+    const updateViewportMode = () => {
+      setIsCompactViewport(mediaQuery.matches);
+    };
+
+    updateViewportMode();
+    mediaQuery.addEventListener("change", updateViewportMode);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateViewportMode);
+    };
   }, []);
 
   useEffect(() => {
@@ -129,6 +145,14 @@ export function AnimatedCalendarView() {
         <div
           onDoubleClick={() => setZenMode(true)}
           className={`absolute inset-0 grid place-items-center ${isZenMode || activeStickyTarget ? "pointer-events-none" : "pointer-events-auto cursor-pointer"}`}
+          style={
+            isCompactViewport
+              ? {
+                  transform: "scale(0.74)",
+                  transformOrigin: "center",
+                }
+              : undefined
+          }
         >
           <Calendar
             activeTarget={activeStickyTarget}
