@@ -1,3 +1,4 @@
+import { motion as m } from "motion/react";
 import type { CalendarDay } from "./day-types";
 
 interface DayCellProps {
@@ -34,7 +35,10 @@ export default function DayCell({
     day.date.getDate() === now.getDate();
 
   return (
-    <div
+    <m.div
+      initial={{ opacity: 0, filter: "blur(4px)" }}
+      animate={{ opacity: 1, filter: "blur(0px)" }}
+      transition={{ duration: 0.18, ease: "easeOut" }}
       onClick={() => onClick(day.date)}
       onMouseEnter={() => onMouseEnter(day.date)}
       onMouseLeave={onMouseLeave}
@@ -73,6 +77,6 @@ export default function DayCell({
           )}
         </span>
       )}
-    </div>
+    </m.div>
   );
 }

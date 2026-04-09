@@ -107,10 +107,9 @@ export function isDateWithinRange(
 }
 
 export function generatePastelColor(): string {
-  // Generate a random pastel color
   const hue = Math.random() * 360;
-  const saturation = 50 + Math.random() * 30; // 50-80%
-  const lightness = 70 + Math.random() * 15; // 70-85%
+  const saturation = 50 + Math.random() * 30;
+  const lightness = 70 + Math.random() * 15;
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
@@ -143,7 +142,8 @@ export function getDateNoteIndicators(
   };
 }
 
-export function isSameNoteTarget(a: NoteTarget, b: NoteTarget) {
+export function isSameNoteTarget(a: NoteTarget | null, b: NoteTarget | null) {
+  if (a === null || b === null) return a === b;
   if (a.kind !== b.kind) return false;
 
   switch (a.kind) {
@@ -179,7 +179,6 @@ export function getDateNoteSelectionOptions(
       endKey: note.endKey,
     } as const;
 
-    // Include ALL range notes that overlap with this date
     if (isDateWithinRange(dateKey, note.startKey, note.endKey)) {
       let title: string;
       if (note.startKey === dateKey && note.endKey === dateKey) {

@@ -30,18 +30,36 @@ export default function HeroImage() {
     <>
       <svg className="absolute h-0 w-0" aria-hidden="true" focusable="false">
         <defs>
-          <clipPath id="calendar-image-clip" clipPathUnits="objectBoundingBox">
+          <clipPath
+            id="calendar-image-clip-mobile"
+            clipPathUnits="objectBoundingBox"
+          >
             <path d="M1,0 L1,0.45 L0.47,0.73 Q0.40,0.75 0.33,0.72 L0,0.6 L0,0 Z" />
           </clipPath>
         </defs>
       </svg>
 
-      <div className="relative inset-x-0 top-0 h-96 overflow-visible">
+      <div className="relative inset-x-0 top-0 h-96 overflow-hidden select-none md:inset-y-0 md:left-0 md:h-full md:w-[38%]">
         <div
-          className="absolute inset-0"
-          style={{ clipPath: "url(#calendar-image-clip)" }}
+          className="absolute inset-0 md:hidden"
+          style={{ clipPath: "url(#calendar-image-clip-mobile)" }}
         >
-          <Image src={imageSrc} fill alt="" className="aspect-square" />
+          <Image
+            src={imageSrc}
+            fill
+            alt=""
+            draggable={false}
+            className="pointer-events-none object-cover select-none"
+          />
+        </div>
+        <div className="absolute inset-0 hidden md:block">
+          <Image
+            src={imageSrc}
+            fill
+            alt=""
+            draggable={false}
+            className="pointer-events-none object-cover select-none"
+          />
         </div>
       </div>
     </>

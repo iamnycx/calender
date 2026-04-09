@@ -41,9 +41,7 @@ export function ModeToggle() {
       return;
     }
 
-    const transition = document.startViewTransition(() => {
-      // Empty callback - we'll apply theme after animation starts
-    });
+    const transition = document.startViewTransition(() => {});
 
     const ready = transition?.ready;
     if (ready !== undefined && ready !== null) {

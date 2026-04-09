@@ -7,45 +7,7 @@ import {
   getNoteTargetLabel,
   useNotesStore,
 } from "~/lib/notes-store";
-
-const MAX_NOTE_LINES = 9;
-const MAX_CHARS_PER_LINE = 24;
-
-function splitTextIntoLines(text: string): string[] {
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let currentLine = "";
-
-  for (const word of words) {
-    const candidate = currentLine ? `${currentLine} ${word}` : word;
-
-    if (candidate.length > MAX_CHARS_PER_LINE) {
-      if (currentLine) {
-        lines.push(currentLine);
-        currentLine = word;
-      } else {
-        lines.push(word.slice(0, MAX_CHARS_PER_LINE));
-        currentLine = word.slice(MAX_CHARS_PER_LINE);
-      }
-    } else {
-      currentLine = candidate;
-    }
-
-    if (lines.length === MAX_NOTE_LINES) {
-      return lines;
-    }
-  }
-
-  if (currentLine && lines.length < MAX_NOTE_LINES) {
-    lines.push(currentLine);
-  }
-
-  while (lines.length < MAX_NOTE_LINES) {
-    lines.push("");
-  }
-
-  return lines;
-}
+import { splitTextIntoLines } from "~/lib/text-utils";
 
 interface NotesProps {
   target: NoteTarget;
@@ -56,6 +18,7 @@ interface NotesProps {
   frame?: boolean;
   _onDelete?: () => void;
   onActivityChange?: () => void;
+  onSubmit?: () => void;
 }
 
 function getValueForTarget(
@@ -97,6 +60,7 @@ export default function Notes({
   frame = true,
   _onDelete,
   onActivityChange,
+  onSubmit,
 }: NotesProps) {
   const hydrateNotes = useNotesStore((state) => state.hydrateNotes);
   const setMonthNote = useNotesStore((state) => state.setMonthNote);
@@ -104,7 +68,10 @@ export default function Notes({
   const setRangeNote = useNotesStore((state) => state.setRangeNote);
   const noteValue = useNotesStore((state) => getValueForTarget(target, state));
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const noteLines = useMemo(() => splitTextIntoLines(noteValue), [noteValue]);
+  const noteLines = useMemo(
+    () => splitTextIntoLines(noteValue, 9),
+    [noteValue],
+  );
   const visibleLineCount = noteLines.filter(Boolean).length;
   const ruledPaperStyle = {
     backgroundImage:
@@ -146,6 +113,10 @@ export default function Notes({
     onActivityChange?.();
   };
 
+  const submitNote = () => {
+    onSubmit?.();
+  };
+
   return (
     <div
       className={`flex h-full flex-col ${frame ? `border-foreground/15 bg-secondary/15 rounded-2xl border border-dashed shadow-sm ${compact ? "p-3" : "p-4"}` : ""} ${className ?? ""}`}
@@ -159,16 +130,29 @@ export default function Notes({
         ref={textareaRef}
         value={noteValue}
         onChange={(event) => updateNote(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter") return;
+          if (event.nativeEvent.isComposing) return;
+
+          event.preventDefault();
+          submitNote();
+        }}
+        onBeforeInput={(event) => {
+          const nativeEvent = event.nativeEvent;
+          if (nativeEvent.inputType !== "insertLineBreak") return;
+
+          event.preventDefault();
+          submitNote();
+        }}
         maxLength={MAX_NOTE_LENGTH}
-        rows={MAX_NOTE_LINES}
+        rows={9}
         placeholder={getPlaceholder(target)}
         spellCheck={false}
         style={ruledPaperStyle}
         className={`font-kalam placeholder:text-foreground/30 min-h-24 w-full flex-1 resize-none border-none bg-transparent p-0 text-base leading-6 outline-none ${compact ? "min-h-18" : "min-h-24"}`}
       />
       <div className="font-kalam text-foreground/35 mt-3 text-right text-[0.62rem]">
-        {visibleLineCount}/{MAX_NOTE_LINES} lines • {noteValue.length}/
-        {MAX_NOTE_LENGTH}
+        {visibleLineCount}/9 lines • {noteValue.length}/{MAX_NOTE_LENGTH}
       </div>
     </div>
   );

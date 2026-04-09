@@ -15,7 +15,6 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import { motion as m } from "motion/react";
-import Notes from "./notes";
 import {
   getDateNoteSelectionOptions,
   getNoteTargetLabel,
@@ -23,6 +22,7 @@ import {
   isSameNoteTarget,
   useNotesStore,
 } from "~/lib/notes-store";
+import Notes from "./notes";
 
 interface StickyNotePanelProps {
   target: NoteTarget;
@@ -44,13 +44,14 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
     if (target.kind === "month") return [];
 
     const dateKey = target.kind === "day" ? target.dateKey : target.startKey;
-    const options = getDateNoteSelectionOptions(dateKey, { dayNotes, rangeNotes });
+    const options = getDateNoteSelectionOptions(dateKey, {
+      dayNotes,
+      rangeNotes,
+    });
     const targetAlreadyIncluded = options.some((option) =>
       isSameNoteTarget(option.target, target),
     );
 
-    // Keep the currently requested note target selectable even if it has no
-    // saved content yet, so users can create a new day/range note.
     if (!targetAlreadyIncluded) {
       options.unshift({
         target,
@@ -167,13 +168,13 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
   };
 
   const pagerButtonClass =
-    "bg-secondary ring-muted-foreground/20 text-black flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-0.75 shadow-2xs ring transition-transform duration-500 ease-in-out outline-none hover:scale-105 focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-95";
+    "bg-secondary ring-muted-foreground/20 text-foreground flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-0.75 shadow-2xs ring transition-transform duration-500 ease-in-out outline-none hover:scale-105 focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-95";
 
   const pagerCounterClass =
-    "bg-secondary/50 ring-muted-foreground/10 text-black flex h-8 min-w-16 items-center justify-center rounded-full px-3 text-xs font-semibold tracking-wide shadow-2xs ring";
+    "bg-secondary/50 ring-muted-foreground/10 text-foreground flex h-8 min-w-16 items-center justify-center rounded-full px-3 text-xs font-semibold tracking-wide shadow-2xs ring";
 
   return (
-    <div className="relative h-88 w-80 -rotate-2">
+    <div className="relative h-88 w-80 -translate-y-16 -rotate-2 md:translate-y-0">
       <svg width="0" height="0" aria-hidden="true" className="absolute">
         <defs>
           <clipPath id={clipPathId} clipPathUnits="objectBoundingBox">
@@ -183,7 +184,7 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
       </svg>
 
       {totalNotes > 1 && (
-        <div className="absolute -bottom-14 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-full bg-white/95 p-1 shadow-md shadow-black/15">
+        <div className="bg-card/90 border-border/60 absolute -bottom-14 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-full border p-1 shadow-md backdrop-blur-xs">
           <button
             type="button"
             onClick={handlePreviousNote}
@@ -206,18 +207,18 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
         </div>
       )}
 
-      <div className="pointer-events-none absolute -top-2 left-1/2 z-40 h-8 w-20 -translate-x-1/2 -rotate-6 bg-neutral-200/80 shadow-sm" />
+      <div className="pointer-events-none absolute -top-2 left-1/2 z-40 h-8 w-20 -translate-x-1/2 -rotate-6 bg-amber-200/70 shadow-sm dark:bg-amber-300/25" />
 
       <div
-        className="relative z-20 h-full w-full overflow-hidden border border-black/15 bg-white p-10"
+        className="border-foreground/20 bg-secondary/70 dark:bg-secondary/60 relative z-20 h-full w-full overflow-hidden border p-10"
         style={{
           clipPath: `url(#${clipPathId})`,
           filter: "drop-shadow(0 16px 22px rgba(0,0,0,0.24))",
         }}
       >
         <div className="relative flex h-full flex-col gap-2">
-          <div className="flex items-center justify-between rounded-md bg-black/5 px-2 py-1">
-            <div className="font-kalam min-w-0 pr-2 text-xs font-semibold text-black/70">
+          <div className="bg-foreground/8 flex items-center justify-between rounded-md px-2 py-1">
+            <div className="text-foreground/75 font-kalam min-w-0 pr-2 text-xs font-semibold">
               <span className="block truncate">
                 {getNoteTargetLabel(selectedTarget)}
               </span>
@@ -226,7 +227,7 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="rounded-full p-1 text-black/55 transition-colors hover:bg-black/10 hover:text-black"
+                className="text-foreground/65 hover:bg-foreground/10 hover:text-foreground rounded-full p-1 transition-colors"
                 aria-label="Delete note"
               >
                 <TrashIcon size={14} weight="bold" />
@@ -234,7 +235,7 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-1 text-black/55 transition-colors hover:bg-black/10 hover:text-black"
+                className="text-foreground/65 hover:bg-foreground/10 hover:text-foreground rounded-full p-1 transition-colors"
                 aria-label="Close note"
               >
                 <CheckIcon size={14} weight="bold" />
@@ -248,13 +249,14 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
             autoFocus
             compact
             frame={false}
-            className="h-full text-black"
+            className="text-foreground h-full"
             onActivityChange={handleActivityChange}
+            onSubmit={onClose}
           />
         </div>
       </div>
 
-      <div className="pointer-events-none absolute -top-4 -right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/92 shadow-md shadow-black/20">
+      <div className="bg-card/90 border-border/70 pointer-events-none absolute -top-4 -right-4 flex h-10 w-10 items-center justify-center rounded-full border shadow-md">
         <svg
           viewBox="0 0 32 32"
           className="h-8 w-8 -rotate-90"
@@ -264,7 +266,7 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
             cx="16"
             cy="16"
             r="12"
-            className="fill-none stroke-black/15"
+            className="stroke-foreground/20 fill-none"
             strokeWidth="2"
           />
           <m.circle
@@ -272,7 +274,7 @@ export function StickyNotePanel({ target, onClose }: StickyNotePanelProps) {
             cx="16"
             cy="16"
             r="12"
-            className="fill-none stroke-black/45"
+            className="stroke-foreground/55 fill-none"
             strokeWidth="2"
             strokeLinecap="round"
             initial={{ pathLength: 1 }}

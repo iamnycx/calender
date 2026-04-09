@@ -8,10 +8,11 @@ import { useCalendarStore } from "~/lib/calendar-store";
 import type { NoteTarget } from "~/lib/notes-store";
 
 interface MonthProps {
+  activeTarget?: NoteTarget | null;
   onOpenNoteTarget?: (target: NoteTarget | null) => void;
 }
 
-export default function Month({ onOpenNoteTarget }: MonthProps) {
+export default function Month({ activeTarget, onOpenNoteTarget }: MonthProps) {
   const currentMonth = useCalendarStore((state) => state.currentMonth);
   const days = getCalendarDays(currentMonth);
 
@@ -19,7 +20,11 @@ export default function Month({ onOpenNoteTarget }: MonthProps) {
     <div className="w-full p-4 pl-0">
       <MonthHeader />
       <WeekdayRow />
-      <DayGrid days={days} onOpenNoteTarget={onOpenNoteTarget} />
+      <DayGrid
+        days={days}
+        activeTarget={activeTarget}
+        onOpenNoteTarget={onOpenNoteTarget}
+      />
     </div>
   );
 }

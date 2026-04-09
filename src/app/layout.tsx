@@ -14,13 +14,12 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${gambarino.className} ${kalam.variable} ${britney.variable}`}>
+    <html
+      lang="en"
+      className={`${gambarino.className} ${kalam.variable} ${britney.variable}`}
+    >
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-        >
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
         </ThemeProvider>
       </body>

@@ -1,51 +1,32 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import { motion as m } from "motion/react";
+
+import Bindings from "./bindings";
 import CalendarFooterStatus from "./calendar-footer-status";
+import HeroImage from "./hero-image";
 import Month from "./month";
 import NotesLegacy from "./notes-legacy";
-import Bindings from "./bindings";
-import HeroImage from "./hero-image";
 import { useCalendarStore } from "~/lib/calendar-store";
+import { formatRelativeUpdatedMeta } from "~/lib/date-utils";
 import {
   type NoteTarget,
+  isSameNoteTarget,
   toDateKey,
-  type TextNoteRecord,
+  toMonthKey,
   useNotesStore,
 } from "~/lib/notes-store";
 
-function toMonthKeyFromDate(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  return `${year}-${month}`;
-}
-
-function formatRelativeUpdatedMeta(record: TextNoteRecord) {
-  const diffMs = Date.now() - record.updatedAt;
-
-  if (diffMs < 60 * 1000) {
-    return "just now";
-  }
-
-  const minutes = Math.floor(diffMs / (60 * 1000));
-  if (minutes < 60) {
-    return `${minutes}min ago`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours}hr ago`;
-  }
-
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
 interface CalendarProps {
+  activeTarget?: NoteTarget | null;
   onOpenNoteTarget?: (target: NoteTarget | null) => void;
 }
 
-export default function Calendar({ onOpenNoteTarget }: CalendarProps) {
+export default function Calendar({
+  activeTarget = null,
+  onOpenNoteTarget,
+}: CalendarProps) {
   const hydrateNotes = useNotesStore((state) => state.hydrateNotes);
   const dayNotes = useNotesStore((state) => state.dayNotes);
   const monthNotes = useNotesStore((state) => state.monthNotes);
@@ -56,10 +37,7 @@ export default function Calendar({ onOpenNoteTarget }: CalendarProps) {
   }, [hydrateNotes]);
 
   const todayKey = toDateKey(new Date());
-  const monthKey = useMemo(
-    () => toMonthKeyFromDate(currentMonth),
-    [currentMonth],
-  );
+  const monthKey = useMemo(() => toMonthKey(currentMonth), [currentMonth]);
 
   const todaysRecord = dayNotes[todayKey] ?? null;
   const monthRecord = monthNotes[monthKey] ?? null;
@@ -79,16 +57,24 @@ export default function Calendar({ onOpenNoteTarget }: CalendarProps) {
   const handleOpenMonthNote = () => {
     if (!onOpenNoteTarget) return;
 
-    onOpenNoteTarget({ kind: "month", monthKey });
+    const nextTarget: NoteTarget = { kind: "month", monthKey };
+    onOpenNoteTarget(
+      isSameNoteTarget(activeTarget, nextTarget) ? null : nextTarget,
+    );
   };
 
   return (
-    <div className="bg-muted relative h-140 w-96 font-mono shadow-2xl">
+    <m.div
+      initial={{ opacity: 0, filter: "blur(10px)", y: 10 }}
+      animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="bg-muted relative h-140 w-88 font-mono shadow-2xl md:h-88 md:w-140"
+    >
       <Bindings />
       <HeroImage />
-      <div className="absolute inset-x-0 bottom-0">
+      <div className="absolute inset-x-0 bottom-0 md:left-[38%] md:w-[62%]">
         <div className="flex justify-between">
-          <div className="relative w-2/3">
+          <div className="relative w-[70%] md:w-[72%]">
             <NotesLegacy
               text={activeRecord?.text ?? ""}
               title={noteTitle}
@@ -96,10 +82,13 @@ export default function Calendar({ onOpenNoteTarget }: CalendarProps) {
               onClick={handleOpenMonthNote}
             />
           </div>
-          <Month onOpenNoteTarget={onOpenNoteTarget} />
+          <Month
+            activeTarget={activeTarget}
+            onOpenNoteTarget={onOpenNoteTarget}
+          />
         </div>
         <CalendarFooterStatus />
       </div>
-    </div>
+    </m.div>
   );
 }

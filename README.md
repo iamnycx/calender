@@ -1,29 +1,57 @@
-# Create T3 App
+# Interactive Calendar Component
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A polished Next.js calendar demo with a two-mode experience:
 
-## What's next? How do I make an app with this?
+- A non-zen calendar that keeps the classic paper-card feel.
+- A zen calendar that emphasizes a larger, cleaner viewing surface.
+- Sticky note editing with month, day, and range notes.
+- Motion-driven transitions for month changes and card entry states.
+- Theme-aware image art that adapts to light and dark mode.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Design Choices
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+This project keeps the interface intentionally tactile and editorial rather than generic:
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- Motion is restrained to opacity and blur for month changes so transitions feel smooth without distracting horizontal movement.
+- Day cards use lightweight entrance motion to keep the grid readable while still feeling alive.
+- The hero image and calendar card are split into distinct visual zones to support the paper-and-collage style of the UI.
+- Light mode is the default theme so the experience opens in the most readable state by default.
+- The zen calendar is spaced for a calmer reading flow, while the regular calendar keeps the compact dashboard layout.
 
-## Learn More
+## Run Locally
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+This project uses Bun.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+1. Install dependencies:
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+```bash
+bun install
+```
 
-## How do I deploy this?
+2. Start the development server:
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```bash
+bun dev
+```
+
+3. Open the app in your browser:
+
+```text
+http://localhost:3000
+```
+
+## Useful Commands
+
+```bash
+bun run build
+bun run check
+bun run lint
+bun run typecheck
+bun run format:check
+```
+
+## Notes
+
+- Theme selection is handled with `next-themes`.
+- Calendar and note state live in local Zustand stores.
+- Motion is powered by `motion/react`.

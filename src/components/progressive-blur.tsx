@@ -1,11 +1,7 @@
-"use client";
-
-import React from "react";
-
 type BlurPosition = "top" | "bottom" | "left" | "right";
 
 const BLUR_LEVELS = [0.5, 1, 2, 4, 8, 16, 32, 64];
-const EDGE_SIZE = "4%";
+const EDGE_SIZE = "5%";
 
 function EdgeBlur({ position }: { position: BlurPosition }) {
   const normalizedPosition: BlurPosition = position;
@@ -37,7 +33,6 @@ function EdgeBlur({ position }: { position: BlurPosition }) {
     return `linear-gradient(${direction}, rgba(0,0,0,0) ${startPercent}%, rgba(0,0,0,1) ${midPercent}%, rgba(0,0,0,1) ${endPercent}%, rgba(0,0,0,0) ${Math.min(endPercent + 12.5, 100)}%)`;
   };
 
-  // Create array with length equal to blurLevels.length - 2 (for before/after pseudo elements)
   const divElements = Array(BLUR_LEVELS.length - 2).fill(null);
 
   return (
@@ -54,7 +49,6 @@ function EdgeBlur({ position }: { position: BlurPosition }) {
             : "100%",
       }}
     >
-      {/* First blur layer (pseudo element) */}
       <div
         className="absolute inset-0"
         style={{
@@ -66,7 +60,6 @@ function EdgeBlur({ position }: { position: BlurPosition }) {
         }}
       />
 
-      {/* Middle blur layers */}
       {divElements.map((_, index) => {
         const blurIndex = index + 1;
         const startPercent = blurIndex * 12.5;
@@ -94,7 +87,6 @@ function EdgeBlur({ position }: { position: BlurPosition }) {
         );
       })}
 
-      {/* Last blur layer (pseudo element) */}
       <div
         className="absolute inset-0"
         style={{

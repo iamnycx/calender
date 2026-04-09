@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion as m } from "motion/react";
-import Calendar from "./calender";
 import { StickyNotePanel } from "./sticky-note-panel";
 import { ZenCalendar } from "./zen-calendar";
+import Calendar from "./calender";
 import { useZenModeStore } from "~/lib/zen-mode-store";
 import { type NoteTarget, useNotesStore } from "~/lib/notes-store";
 
@@ -23,9 +23,7 @@ export function AnimatedCalendarView() {
 
   useEffect(() => {
     const audio = new Audio("/sfx/zen-toggle.mp3");
-    void audio.play().catch(() => {
-      // Ignore autoplay failures when browser blocks playback.
-    });
+    void audio.play().catch(() => undefined);
   }, [isZenMode]);
 
   const PAN_TO_ZEN = { x: -980, y: 620 };
@@ -45,9 +43,7 @@ export function AnimatedCalendarView() {
 
   const playZenToggleSound = useCallback(() => {
     const audio = new Audio("/sfx/zen-toggle.mp3");
-    void audio.play().catch(() => {
-      // Ignore autoplay failures when browser blocks playback.
-    });
+    void audio.play().catch(() => undefined);
   }, []);
 
   const playStickyOpenSound = useCallback(() => {
@@ -57,9 +53,7 @@ export function AnimatedCalendarView() {
 
     stickyOpenSoundTimeoutRef.current = setTimeout(() => {
       const audio = new Audio("/sfx/pencil-write.mp3");
-      void audio.play().catch(() => {
-        // Ignore autoplay failures when browser blocks playback.
-      });
+      void audio.play().catch(() => undefined);
       stickyOpenSoundTimeoutRef.current = null;
     }, 1400);
   }, []);
@@ -136,7 +130,10 @@ export function AnimatedCalendarView() {
           onDoubleClick={() => setZenMode(true)}
           className={`absolute inset-0 grid place-items-center ${isZenMode || activeStickyTarget ? "pointer-events-none" : "pointer-events-auto cursor-pointer"}`}
         >
-          <Calendar onOpenNoteTarget={setStickyTarget} />
+          <Calendar
+            activeTarget={activeStickyTarget}
+            onOpenNoteTarget={setStickyTarget}
+          />
         </div>
 
         <div

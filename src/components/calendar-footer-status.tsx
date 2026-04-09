@@ -1,3 +1,5 @@
+"use client";
+
 import { useCalendarStore } from "~/lib/calendar-store";
 
 function formatDateLabel(date: Date) {

@@ -1,41 +1,4 @@
-const MAX_NOTE_LINES = 10;
-const MAX_CHARS_PER_LINE = 24;
-
-function splitTextIntoLines(text: string): string[] {
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let currentLine = "";
-
-  for (const word of words) {
-    const candidate = currentLine ? `${currentLine} ${word}` : word;
-
-    if (candidate.length > MAX_CHARS_PER_LINE) {
-      if (currentLine) {
-        lines.push(currentLine);
-        currentLine = word;
-      } else {
-        lines.push(word.slice(0, MAX_CHARS_PER_LINE));
-        currentLine = word.slice(MAX_CHARS_PER_LINE);
-      }
-    } else {
-      currentLine = candidate;
-    }
-
-    if (lines.length === MAX_NOTE_LINES) {
-      return lines;
-    }
-  }
-
-  if (currentLine && lines.length < MAX_NOTE_LINES) {
-    lines.push(currentLine);
-  }
-
-  while (lines.length < MAX_NOTE_LINES) {
-    lines.push("");
-  }
-
-  return lines;
-}
+import { splitTextIntoLines } from "~/lib/text-utils";
 
 interface NotesLegacyProps {
   text: string;
@@ -50,7 +13,7 @@ export default function NotesLegacy({
   metadata,
   onClick,
 }: NotesLegacyProps) {
-  const noteLines = splitTextIntoLines(text);
+  const noteLines = splitTextIntoLines(text, 10);
 
   return (
     <button

@@ -19,9 +19,9 @@ export default function Bindings() {
         focusable="false"
       >
         <Holes className="fill-background" />
-        <Binds className="stroke-foreground" />
-        <Wire className="stroke-foreground" />
-        <Hook className="fill-foreground" />
+        <Binds className="stroke-foreground dark:stroke-primary" />
+        <Wire className="stroke-foreground dark:stroke-primary" />
+        <Hook className="fill-foreground dark:fill-primary" />
       </svg>
     </div>
   );
