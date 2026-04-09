@@ -41,7 +41,7 @@ export function ModeToggle() {
       return;
     }
 
-    const transition = document.startViewTransition(() => {});
+    const transition = document.startViewTransition(() => undefined);
 
     const ready = transition?.ready;
     if (ready !== undefined && ready !== null) {

@@ -14,7 +14,7 @@ export default function MonthControls() {
 
   const playButtonClick = () => {
     const audio = new Audio("/sfx/button-click.mp3");
-    void audio.play().catch(() => {});
+    void audio.play().catch(() => undefined);
   };
 
   const handlePreviousMonth = () => {
@@ -29,7 +29,7 @@ export default function MonthControls() {
 
   const handleResetToCurrentMonth = () => {
     const audio = new Audio("/sfx/opening-door.mp3");
-    void audio.play().catch(() => {});
+    void audio.play().catch(() => undefined);
     resetToCurrentMonth();
   };
 

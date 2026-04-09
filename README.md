@@ -8,6 +8,17 @@ A polished Next.js calendar demo with a two-mode experience:
 - Motion-driven transitions for month changes and card entry states.
 - Theme-aware image art that adapts to light and dark mode.
 
+## Live URL
+
+https://calender-one-self.vercel.app/
+
+## Clone Repository
+
+```bash
+git clone https://github.com/iamnycx/calender
+cd calender
+```
+
 ## Design Choices
 
 This project keeps the interface intentionally tactile and editorial rather than generic:
